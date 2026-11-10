@@ -1,6 +1,12 @@
-# detour-web
+# detour-web (Overwire product site)
 
-Product site for [Detour](https://github.com/proto-void/detour) — Astro static site on a Cloudflare Worker at **https://detour.protovoid.com**.
+Product site for [Overwire](https://github.com/proto-void/overwire) — Astro static site on a Cloudflare Worker.
+
+- Canonical: **https://overwire.protovoid.com**
+- Legacy host: **https://detour.protovoid.com**
+- Both are **dual-host 200** on Worker **`detour-web`** (+ workers.dev). No live 301 yet.
+
+GitHub repo is **`proto-void/overwire-web`**. Worker / local package name may still say `detour-web` until a later cutover.
 
 ## Develop
 
@@ -21,20 +27,13 @@ Requires Cloudflare auth (`wrangler login` or `CLOUDFLARE_API_TOKEN`) on the Pro
 npm run deploy
 ```
 
-`wrangler.jsonc` attaches custom domain `detour.protovoid.com`. If deploy succeeds but DNS is missing, in Cloudflare Dashboard → **Workers** → **detour-web** → **Domains & Routes**, confirm the custom domain; or add a Worker route / custom domain for `detour.protovoid.com` on the `protovoid.com` zone.
+See [docs/DEPLOY.md](docs/DEPLOY.md) for dual-host attach and the **deferred** `detour` → `overwire` 301 cutover (deploy redirect template only when DNS is clean). Template: `workers/detour-to-overwire-redirect/`.
 
 ## Push to GitHub
 
 ```sh
-cd ~/Project/detour-web
-git init
-git add .
-git commit -m "Initial Detour product site"
-gh repo create proto-void/detour-web --public --source=. --remote=origin --push
-# or:
-# git remote add origin git@github.com:proto-void/detour-web.git
-# git branch -M main
-# git push -u origin main
+cd ~/Project/overwire-web
+git remote -v             # origin → https://github.com/proto-void/overwire-web.git
 ```
 
-Use your **Protovoid** org account (not a personal Rogers account).
+Use your **Protovoid** org account.

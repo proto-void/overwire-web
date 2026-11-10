@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ChromeIcon from '../components/ChromeIcon.astro';
+import GitHubIcon from '../components/GitHubIcon.astro';
 import { siteConfig } from '../../site.config';
 import { faqPageLd } from '../lib/seo';
 
@@ -9,63 +11,125 @@ const features = [
     body: 'Redirect requests so production scripts, APIs, or hosts load from localhost or another origin.',
     image: '/screenshots/redirect.webp',
     imagePng: '/screenshots/redirect.png',
-    alt: 'Detour rules editor with a redirect from cdn.example.com to localhost:5173',
+    alt: 'Overwire rules editor with a redirect from cdn.example.com to localhost:5173',
   },
   {
     title: 'Modify headers',
     body: 'Add, rewrite, or strip request and response headers on matched URLs.',
     image: '/screenshots/headers.webp',
     imagePng: '/screenshots/headers.png',
-    alt: 'Detour modify-headers action editing request and response headers for api.example.com',
+    alt: 'Overwire modify-headers action editing request and response headers for api.example.com',
   },
   {
     title: 'Inject JS / CSS',
     body: 'Inject JavaScript or CSS on matched pages while you debug — no proxy appliance.',
     image: '/screenshots/inject.webp',
     imagePng: '/screenshots/inject.png',
-    alt: 'Detour inject JavaScript rule editor with inline code for example.com',
+    alt: 'Overwire inject JavaScript rule editor with inline code for example.com',
   },
   {
     title: 'Mock fetch / XHR',
     body: 'Stub fetch and XHR responses in Chrome so you can override APIs without a mock server.',
     image: '/screenshots/mock.webp',
     imagePng: '/screenshots/mock.png',
-    alt: 'Detour mock fetch editor stubbing GET api.example.com/v1/me with JSON',
+    alt: 'Overwire mock fetch editor stubbing GET api.example.com/v1/me with JSON',
   },
   {
     title: 'Replace response body',
     body: 'Swap response bodies locally after you allow body override (debugger on Chrome).',
     image: '/screenshots/body.webp',
     imagePng: '/screenshots/body.png',
-    alt: 'Detour replace-body editor overriding cdn.example.com/config.json for local flags',
+    alt: 'Overwire replace-body editor overriding cdn.example.com/config.json for local flags',
+  },
+] as const;
+
+const pricingTiers = [
+  {
+    id: 'community',
+    name: 'Community',
+    price: 'Free forever',
+    detail: 'MIT · local-only · no account',
+    features: [
+      'All network rules (redirect, headers, inject, mock, body replace)',
+      'API Tester and Databases workbench',
+      'Rule Tester, Match Log, Local Bridge CLI',
+      'Unsigned OS helper packs',
+    ],
+    ctaLabel: 'Get for Chrome',
+    ctaHref: siteConfig.chromeStoreUrl || siteConfig.github,
+    highlighted: false,
+  },
+  {
+    id: 'pro',
+    name: 'Overwire Pro',
+    price: '$19 one-time',
+    detail: 'or $29 / year Indie',
+    features: [
+      'Visual ER diagrams, schema/data diff, table designer DDL',
+      'API Tester load reports (p50 / p95 / p99) with export',
+      'Optional cross-profile browser sync for rule groups',
+      'Signed & notarized native helper installers',
+    ],
+    ctaLabel: siteConfig.paymentLinks.proOneTime ? 'Get Pro' : 'Coming soon',
+    ctaHref: siteConfig.paymentLinks.proOneTime || '#pricing',
+    ctaSecondaryLabel: siteConfig.paymentLinks.proYearly ? 'Indie yearly' : null,
+    ctaSecondaryHref: siteConfig.paymentLinks.proYearly || null,
+    highlighted: true,
+  },
+  {
+    id: 'team',
+    name: 'Team / Enterprise',
+    price: '$8 / seat / mo',
+    detail: 'annual · or $299 / yr site license',
+    features: [
+      'External secret vault resolver (1Password, Vault, AWS)',
+      'Secret redaction guard on exports',
+      'Chrome Enterprise policy (managed storage)',
+      'Everything in Pro',
+    ],
+    ctaLabel: siteConfig.paymentLinks.teamSeat ? 'Start Team' : 'Coming soon',
+    ctaHref: siteConfig.paymentLinks.teamSeat || '#pricing',
+    ctaSecondaryLabel: siteConfig.paymentLinks.teamSite ? 'Site license' : null,
+    ctaSecondaryHref: siteConfig.paymentLinks.teamSite || null,
+    highlighted: false,
   },
 ] as const;
 
 const faqs = [
   {
-    question: 'Is Detour a Charles or Fiddler alternative?',
+    question: 'Is Overwire a Charles or Fiddler alternative?',
     answer:
-      'Detour is a browser extension for redirecting and overriding requests in Chrome (and Edge/Firefox), not a system-wide MITM proxy. Use it when you want local redirect rules, header changes, mocks, and injects without installing a desktop proxy.',
+      'Overwire is a browser extension for redirecting and overriding requests in Chrome (and Edge/Firefox), not a system-wide MITM proxy. Use it when you want local redirect rules, header changes, mocks, and injects without installing a desktop proxy.',
   },
   {
-    question: 'Is Detour a Resource Override alternative?',
+    question: 'Is Overwire a Resource Override alternative?',
     answer:
-      'Yes — Detour is an MIT rewrite inspired by Resource Override, built for Manifest V3. See the honest comparison at /vs-resource-override/.',
+      'Yes — Overwire is an MIT rewrite inspired by Resource Override, built for Manifest V3. See the honest comparison at /vs-resource-override/.',
   },
   {
     question: 'Does any of my data leave the device?',
     answer:
-      'No Detour cloud and no account. Rules, mocks, and the match log stay in the browser. The product site may see standard CDN edge logs only.',
+      'No Overwire cloud and no account. Rules, mocks, the match log, API Tester collections and history, and Databases connection metadata stay on your device. The product site may see standard CDN edge logs only.',
+  },
+  {
+    question: 'What is the Databases helper?',
+    answer:
+      'Databases uses an optional local native host (Overwire Helper) so the extension can talk to engines on your machine or network. You install and start it when you need it. Connection secrets can live in the OS keychain via that helper. There is still no Overwire server.',
+  },
+  {
+    question: 'Does API Tester run on my device?',
+    answer:
+      'Yes. API Tester is built into the extension. Requests you send go from your browser to the URLs you choose. Collections, environments, and history stay local — not on an Overwire backend.',
   },
   {
     question: 'Why does Chrome ask for the debugger permission?',
     answer:
-      'Body replace on Chrome uses the debugger API because Manifest V3 has no other way to fulfill a response body in place. Detour only attaches after you click Allow debugger, and only for matching http(s) tabs.',
+      'Body replace on Chrome uses the debugger API because Manifest V3 has no other way to fulfill a response body in place. Overwire only attaches after you click Allow debugger, and only for matching http(s) tabs.',
   },
   {
-    question: 'Is Detour related to the Detour proxy add-on?',
+    question: 'Was Overwire formerly Detour?',
     answer:
-      'No. This Detour is a Protovoid developer tools extension (proto-void/detour). It is not a VPN or traffic proxy SaaS.',
+      'Yes. Overwire is the Protovoid developer tools extension (same product lineage as Detour). It is not a VPN or traffic proxy SaaS, and it is unrelated to other “Detour” proxy add-ons.',
   },
 ] as const;
 ---
@@ -85,7 +149,7 @@ const faqs = [
         <div class="hero__brand reveal">
           <img
             src="/brand/logo.svg"
-            alt="Detour"
+            alt="Overwire"
             width="220"
             height="48"
             class="hero__logo"
@@ -96,22 +160,27 @@ const faqs = [
         </h1>
         <p class="hero__lede reveal reveal--delay-2">
           {siteConfig.tagline} Free, MIT-licensed extension to redirect requests, modify headers,
-          mock fetch/XHR, inject JS/CSS, and replace bodies — rules stay on your device. No account.
-          No Detour server.
+          mock fetch/XHR, inject JS/CSS, and replace bodies — plus a local API Tester and Databases
+          workbench. Rules and workbench data stay on your device. No account. No Overwire server.
         </p>
         <div class="hero__cta reveal reveal--delay-3">
-          <a class="btn btn--primary" href={siteConfig.github}>View on GitHub</a>
           {
             siteConfig.chromeStoreUrl ? (
-              <a class="btn btn--ghost" href={siteConfig.chromeStoreUrl}>
+              <a class="btn btn--primary" href={siteConfig.chromeStoreUrl}>
+                <ChromeIcon size={18} />
                 Get for Chrome
               </a>
             ) : (
               <span class="btn btn--muted" title="Chrome Web Store listing coming soon">
+                <ChromeIcon size={18} />
                 Chrome soon
               </span>
             )
           }
+          <a class="btn btn--ghost" href={siteConfig.github}>
+            <GitHubIcon size={18} />
+            View on GitHub
+          </a>
         </div>
       </div>
     </section>
@@ -119,10 +188,10 @@ const faqs = [
     <section class="see" id="see" aria-labelledby="see-heading">
       <div class="wrap">
         <header class="see__head reveal">
-          <h2 id="see-heading">See it in Detour</h2>
+          <h2 id="see-heading">See it in Overwire</h2>
           <p>
-            The popup keeps Detour on, shows what applied on this tab, and opens Rules, API Tester, and
-            the match log — without leaving the page you are debugging.
+            The popup keeps Overwire on, shows what applied on this tab, and opens Rules, API Tester,
+            and the match log — without leaving the page you are debugging.
           </p>
         </header>
         <figure class="see__frame reveal reveal--delay-1">
@@ -130,7 +199,7 @@ const faqs = [
             <source srcset="/screenshots/popup.webp" type="image/webp" />
             <img
               src="/screenshots/popup.png"
-              alt="Detour extension popup in dark theme showing Applied status, Local overrides group, and links to Rules and Log"
+              alt="Overwire extension popup in dark theme showing Applied status, Local overrides group, and links to Rules and Log"
               width="400"
               height="640"
               loading="eager"
@@ -180,6 +249,93 @@ const faqs = [
       </div>
     </section>
 
+    <section class="workbench" id="workbench" aria-labelledby="workbench-heading">
+      <div class="wrap">
+        <header class="workbench__head reveal">
+          <h2 id="workbench-heading">Workbench</h2>
+          <p>
+            Overrides get production pointed at your machine. The same extension also keeps HTTP and
+            database work local — no Overwire cloud, no account.
+          </p>
+        </header>
+        <div class="workbench__grid">
+          <article class="workbench__block reveal reveal--delay-1">
+            <h3>API Tester</h3>
+            <p>
+              Send requests from Chrome with tabs, collections, environments, and history that stay on
+              your device. Use it beside your redirect and mock rules when you are shaping APIs or
+              checking what the page should see.
+            </p>
+          </article>
+          <article class="workbench__block reveal reveal--delay-2">
+            <h3>Databases</h3>
+            <p>
+              Browse schemas and run queries through an optional local helper — your connections and
+              query collections stay on the machine. Install and start the helper when you need it;
+              production rails stay cautious by default.
+            </p>
+          </article>
+        </div>
+        <p class="workbench__teaser reveal reveal--delay-3">
+          What shipped and what is on the way:{' '}
+          <a href="/changelog/">Changelog</a>.
+        </p>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing" aria-labelledby="pricing-heading">
+      <div class="wrap">
+        <header class="pricing__head reveal">
+          <h2 id="pricing-heading">Pricing</h2>
+          <p>
+            Core network overrides, API Tester, and Databases stay free and MIT forever. Pro and Team
+            unlock power tools offline via a signed license key — no Overwire account required.
+          </p>
+        </header>
+        <div class="pricing__grid">
+          {
+            pricingTiers.map((tier, i) => (
+              <article
+                class={`pricing__card reveal reveal--delay-${Math.min(i + 1, 3)} ${tier.highlighted ? 'pricing__card--highlight' : ''}`}
+              >
+                <h3>{tier.name}</h3>
+                <p class="pricing__price">{tier.price}</p>
+                <p class="pricing__detail">{tier.detail}</p>
+                <ul>
+                  {tier.features.map((feature) => (
+                    <li>{feature}</li>
+                  ))}
+                </ul>
+                <div class="pricing__cta">
+                  {tier.ctaLabel === 'Coming soon' ? (
+                    <span class="btn btn--muted" title="Stripe Payment Links not configured yet">
+                      Coming soon
+                    </span>
+                  ) : (
+                    <a
+                      class={tier.highlighted ? 'btn btn--primary' : 'btn btn--ghost'}
+                      href={tier.ctaHref}
+                    >
+                      {tier.ctaLabel}
+                    </a>
+                  )}
+                  {'ctaSecondaryHref' in tier && tier.ctaSecondaryHref && tier.ctaSecondaryLabel ? (
+                    <a class="btn btn--ghost" href={tier.ctaSecondaryHref}>
+                      {tier.ctaSecondaryLabel}
+                    </a>
+                  ) : null}
+                </div>
+              </article>
+            ))
+          }
+        </div>
+        <p class="pricing__note reveal">
+          Checkout links land here when Stripe Payment Links are wired. Until then, Community stays
+          fully usable from the Chrome Web Store and GitHub.
+        </p>
+      </div>
+    </section>
+
     <section class="faq" id="faq" aria-labelledby="faq-heading">
       <div class="wrap">
         <header class="faq__head reveal">
@@ -199,6 +355,10 @@ const faqs = [
             ))
           }
         </div>
+        <p class="faq__support reveal">
+          Need help beyond the FAQ? See <a href="/support/">Support</a> for bugs, feature ideas, and
+          community questions on GitHub.
+        </p>
       </div>
     </section>
   </main>
@@ -443,6 +603,168 @@ const faqs = [
     height: auto;
   }
 
+  .workbench {
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+  }
+
+  .workbench__head {
+    margin-bottom: var(--space-6);
+    max-width: 36rem;
+  }
+
+  .workbench__head h2 {
+    margin: 0 0 var(--space-2);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    letter-spacing: -0.03em;
+  }
+
+  .workbench__head p {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  .workbench__grid {
+    display: grid;
+    gap: var(--space-6);
+    max-width: 44rem;
+  }
+
+  @media (min-width: 40rem) {
+    .workbench__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+  }
+
+  .workbench__block h3 {
+    margin: 0 0 var(--space-2);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .workbench__block h3::before {
+    content: '';
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    margin-right: 0.55rem;
+    vertical-align: 0.05em;
+    background: var(--pv-gradient);
+  }
+
+  .workbench__block p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: var(--text-base);
+  }
+
+  .workbench__teaser {
+    margin: var(--space-6) 0 0;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .workbench__teaser a {
+    color: var(--accent);
+  }
+
+  .pricing {
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 70%);
+  }
+
+  .pricing__head {
+    margin-bottom: var(--space-6);
+    max-width: 36rem;
+  }
+
+  .pricing__head h2 {
+    margin: 0 0 var(--space-2);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    letter-spacing: -0.03em;
+  }
+
+  .pricing__head p {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  .pricing__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 56rem) {
+    .pricing__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+      align-items: stretch;
+    }
+  }
+
+  .pricing__card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .pricing__card--highlight {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .pricing__card h3 {
+    margin: 0;
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.35rem);
+    letter-spacing: -0.02em;
+  }
+
+  .pricing__price {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 620;
+    letter-spacing: -0.02em;
+  }
+
+  .pricing__detail {
+    margin: 0;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .pricing__card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    flex: 1;
+  }
+
+  .pricing__card li + li {
+    margin-top: var(--space-2);
+  }
+
+  .pricing__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .pricing__note {
+    margin: var(--space-6) 0 0;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    max-width: 40rem;
+  }
+
   .faq {
     padding: var(--space-8) 0;
     border-top: 1px solid var(--border);
@@ -499,6 +821,16 @@ const faqs = [
 
   .faq__item[open] summary::after {
     content: '−';
+  }
+
+  .faq__support {
+    margin: var(--space-5) 0 0;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .faq__support a {
+    color: var(--accent);
   }
 
   .faq__item p {

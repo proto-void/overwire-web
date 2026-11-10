@@ -1,26 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-label="Detour">
-  <defs>
-    <linearGradient id="detour-stroke" x1="20" y1="100" x2="108" y2="28" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#f20294"/>
-      <stop offset="0.38" stop-color="#7b1398"/>
-      <stop offset="0.68" stop-color="#4a1f9a"/>
-      <stop offset="1" stop-color="#c08cff"/>
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="28" fill="#0f0c1b"/>
-  <!-- Detour path: straight → bend up → continue → arrow (thick for 16px) -->
-  <path
-    d="M24 78h28c10 0 12-28 24-28h28"
-    stroke="url(#detour-stroke)"
-    stroke-width="12"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-  <path
-    d="M90 40l14 10-14 10"
-    stroke="url(#detour-stroke)"
-    stroke-width="12"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-label="Overwire">
+  <rect width="128" height="128" rx="28" fill="#0B0F19"/>
+  <line x1="16" y1="84" x2="40" y2="84" stroke="#E2E8F0" stroke-width="10" stroke-linecap="round"/>
+  <line x1="50" y1="84" x2="78" y2="84" stroke="#334155" stroke-width="7" stroke-linecap="round" stroke-dasharray="4 8"/>
+  <line x1="88" y1="84" x2="112" y2="84" stroke="#E2E8F0" stroke-width="10" stroke-linecap="round"/>
+  <path d="M 34 84 C 34 28, 94 28, 94 84" fill="none" stroke="#FF6B00" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="34" cy="84" r="10" fill="#FF6B00"/>
+  <circle cx="94" cy="84" r="12" fill="#00FF66"/>
 </svg>

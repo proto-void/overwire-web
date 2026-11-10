@@ -1,7 +1,7 @@
 /**
- * Thin wrapper: run from detour-web, capture via the Detour extension harness.
+ * Thin wrapper: run from overwire-web, capture via the Overwire extension harness.
  *
- *   CHROME=$(node "../../Resource Override/extension/scripts/install-chrome.mjs") \
+ *   CHROME=$(node "../../overwire/extension/scripts/install-chrome.mjs") \
  *     node scripts/capture-screenshots.mjs
  */
 import { spawnSync } from 'node:child_process';
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const script = path.resolve(
   __dirname,
-  '../../../Resource Override/extension/scripts/capture-web-screenshots.mjs',
+  '../../../overwire/extension/scripts/capture-web-screenshots.mjs',
 );
 const result = spawnSync(process.execPath, [script], {
   stdio: 'inherit',
@@ -20,7 +20,7 @@ const result = spawnSync(process.execPath, [script], {
     DETOUR_WEB_SHOTS: path.resolve(__dirname, '../public/screenshots'),
     DETOUR_STORE_ASSETS: path.resolve(
       __dirname,
-      '../../../Resource Override/docs/distribution/store-assets',
+      '../../../overwire/docs/distribution/store-assets',
     ),
   },
 });

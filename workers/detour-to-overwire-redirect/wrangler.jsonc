@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "detour-to-overwire-redirect",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-04",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "detour.protovoid.com",
+      "custom_domain": true
+    }
+  ]
+}

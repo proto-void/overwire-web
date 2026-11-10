@@ -1,0 +1,455 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ChromeIcon from '../../components/ChromeIcon.astro';
+import { siteConfig } from '../../../site.config';
+import { breadcrumbLd } from '../../lib/seo';
+
+const title = `Changelog · ${siteConfig.name}`;
+const description =
+  'Overwire release notes — what is current on the Chrome Web Store, what is on the way, and what is coming soon.';
+
+type StatusKind = 'current' | 'on-the-way' | 'coming-soon' | 'released';
+
+const releases = [
+  {
+    version: '0.1.3',
+    status: 'Submitted for review',
+    statusKind: 'on-the-way' as StatusKind,
+    summary:
+      'Overwire rebrand (Bypass Arc). In-place Chrome Web Store update on the same listing — submitted for review; not live as Overwire until Chrome approves.',
+    items: [
+      'Product renamed to Overwire (same extension id; formerly Detour on the store)',
+      'Bypass Arc store branding, listing copy, and Overwire package name',
+      'Version 0.1.3 Overwire package submitted for Chrome review',
+    ],
+  },
+  {
+    version: '0.1.2',
+    status: 'Current on Chrome Web Store',
+    statusKind: 'current' as StatusKind,
+    summary:
+      'Databases workbench and small API Tester follow-ups. Live listing still shows Detour until the Overwire 0.1.3 review clears.',
+    items: [
+      'Databases workbench: explorer, multi query tabs, run from gutter or selection or whole script, Stop, multi-result sets',
+      'Saved query collections and a clearer Install Helper / Start helper flow',
+      'Safer production connection defaults and connection dialog polish',
+      'Small further API Tester polish',
+    ],
+  },
+  {
+    version: '0.1.1',
+    status: 'Released',
+    statusKind: 'released' as StatusKind,
+    summary: 'API Tester UX polish. Shipped under the Detour store name.',
+    items: [
+      'Cleaner API Tester request bar, tabs, and Tools drawer',
+      'Smarter URL field that grows when you focus it',
+      'Easier collections, environments, and history',
+      'Related options editor polish',
+    ],
+  },
+  {
+    version: '0.1.0',
+    status: 'Released',
+    statusKind: 'released' as StatusKind,
+    summary: 'Baseline Detour release for redirects, overrides, and early local workbench surfaces.',
+    items: [
+      'Redirect URLs, modify headers, inject JS/CSS, mock fetch/XHR, replace response bodies',
+      'Local Bridge for serving files from disk',
+      'Early API Tester and Databases where present in the 0.1.0 package',
+    ],
+  },
+] as const;
+
+const latestVersion = releases[0].version;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/changelog/"
+  jsonLd={breadcrumbLd([
+    { name: 'Home', path: '/' },
+    { name: 'Changelog', path: '/changelog/' },
+  ])}
+>
+  <main class="legal">
+    <div class="wrap legal__inner">
+      <header class="legal__head">
+        <p class="legal__eyebrow">Releases</p>
+        <h1>Changelog</h1>
+        <p class="legal__meta">
+          Newest first. Store listing versions can lag a submitted package while Chrome reviews.
+        </p>
+        <div class="release-controls" role="group" aria-label="Changelog expand controls">
+          <button type="button" class="btn btn--ghost release-controls__btn" data-expand-all>
+            Expand all
+          </button>
+          <button type="button" class="btn btn--ghost release-controls__btn" data-collapse-all>
+            Collapse all
+          </button>
+        </div>
+      </header>
+
+      <div class="prose" data-release-list>
+        {
+          releases.map((release) => (
+            <details
+              class="release"
+              open={release.version === latestVersion}
+              data-release
+            >
+              <summary class="release__summary">
+                <span class="release__heading" id={`v-${release.version}`}>
+                  <span class="release__version">{release.version}</span>
+                  <span class={`release__status release__status--${release.statusKind}`}>
+                    {release.statusKind === 'current' && (
+                      <ChromeIcon class="release__icon release__icon--chrome" size={26} />
+                    )}
+                    {release.statusKind === 'on-the-way' && (
+                      <svg
+                        class="release__icon release__icon--rocket-launch"
+                        viewBox="0 0 24 24"
+                        width="26"
+                        height="26"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <g class="rocket-body">
+                          <path
+                            fill="currentColor"
+                            d="M12 2c2.8 1.6 5 4.6 5.4 8.1-.9 1.8-2.3 3.3-4 4.3v2.1h-2.8v-2.1c-1.7-1-3.1-2.5-4-4.3C6.9 6.6 9.2 3.6 12 2Zm0 4.6a1.8 1.8 0 1 0 .02 3.6A1.8 1.8 0 0 0 12 6.6Z"
+                          />
+                          <path fill="currentColor" d="M8.4 12.6 6.2 16.4l2.8-.9.8-2.1Zm7.2 0 .8 2.1 2.8.9-2.2-3.8Z" />
+                          <path
+                            class="rocket-flame rocket-flame--outer"
+                            fill="var(--pv-magenta)"
+                            d="M10.4 17.2h3.2l-.7 3.6c-.2.9-1 1.5-1.9 1.5.1-1.2.2-2.4 0-3.6Z"
+                          />
+                          <path
+                            class="rocket-flame"
+                            fill="var(--accent)"
+                            d="M11 17.4h2l-.4 2.6c-.1.6-.6 1-1.2 1 .1-.8.2-1.7 0-2.6Z"
+                          />
+                        </g>
+                      </svg>
+                    )}
+                    {release.statusKind === 'coming-soon' && (
+                      <svg
+                        class="release__icon release__icon--rocket-ready"
+                        viewBox="0 0 24 24"
+                        width="26"
+                        height="26"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <g class="rocket-ready">
+                          <path
+                            fill="currentColor"
+                            d="M12 3.2c2.3 1.3 4.1 3.8 4.5 6.7-.8 1.5-2 2.8-3.4 3.6v1.6h-2.2v-1.6c-1.4-.8-2.6-2.1-3.4-3.6.4-2.9 2.2-5.4 4.5-6.7Zm0 3.8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"
+                          />
+                          <path fill="currentColor" d="M8.9 12.2 7.2 15.1l2.2-.7.6-1.6zm6.2 0 .6 1.6 2.2.7-1.7-2.9Z" />
+                          <path fill="currentColor" opacity="0.4" d="M10.4 16.4h3.2v1.2h-3.2z" />
+                          <path
+                            class="pad-glow"
+                            fill="var(--accent)"
+                            d="M8.6 19h6.8a.7.7 0 0 1 .7.7v.4H7.9v-.4a.7.7 0 0 1 .7-.7Z"
+                          />
+                        </g>
+                      </svg>
+                    )}
+                    <span class="release__status-label">{release.status}</span>
+                  </span>
+                </span>
+              </summary>
+              <div class="release__body">
+                <p>{release.summary}</p>
+                <ul>
+                  {release.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const list = document.querySelector('[data-release-list]');
+    if (list) {
+      const items = () => list.querySelectorAll<HTMLDetailsElement>('details[data-release]');
+      document.querySelector('[data-expand-all]')?.addEventListener('click', () => {
+        items().forEach((el) => {
+          el.open = true;
+        });
+      });
+      document.querySelector('[data-collapse-all]')?.addEventListener('click', () => {
+        items().forEach((el) => {
+          el.open = false;
+        });
+      });
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding: clamp(3rem, 8vh, 5rem) 0 var(--space-8);
+  }
+
+  .legal__inner {
+    max-width: 40rem;
+  }
+
+  .legal__eyebrow {
+    margin: 0 0 var(--space-2);
+    color: var(--accent);
+    font-size: var(--text-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .legal__head h1 {
+    margin: 0 0 var(--space-3);
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+    letter-spacing: -0.04em;
+  }
+
+  .legal__meta {
+    margin: 0 0 var(--space-4);
+    color: var(--text-2);
+    font-size: var(--text-sm);
+  }
+
+  .release-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-6);
+  }
+
+  .release-controls__btn {
+    padding: 0.35rem 0.75rem;
+    font-size: var(--text-sm);
+  }
+
+  .release {
+    border-top: 1px solid var(--border);
+  }
+
+  .release:first-of-type {
+    border-top: none;
+  }
+
+  .release__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    list-style: none;
+    padding: var(--space-4) 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .release__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .release__summary::after {
+    content: '+';
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 1.1em;
+    line-height: 1;
+  }
+
+  .release[open] > .release__summary::after {
+    content: '−';
+  }
+
+  .release__summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .release__heading {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    min-width: 0;
+  }
+
+  .release__version {
+    color: var(--text);
+  }
+
+  .release__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .release__status-label {
+    color: inherit;
+  }
+
+  .release__icon {
+    flex-shrink: 0;
+    display: block;
+    width: 1.45em;
+    height: 1.45em;
+    color: var(--text-2);
+  }
+
+  .release__heading .release__icon {
+    /* Match version header scale (~22–28px at text-lg) */
+    width: 26px;
+    height: 26px;
+  }
+
+  .release__body {
+    padding: 0 0 var(--space-5);
+  }
+
+  .release__body p {
+    margin: 0 0 var(--space-3);
+  }
+
+  /* Chrome mark: soft pulse / glow */
+  .release__icon--chrome {
+    border-radius: 50%;
+    animation: chrome-pulse 2.8s ease-in-out infinite;
+  }
+
+  /* Launching rocket: lift + flame flicker */
+  .release__icon--rocket-launch {
+    color: var(--accent);
+    overflow: visible;
+  }
+
+  .release__icon--rocket-launch .rocket-body {
+    transform-origin: 12px 18px;
+    animation: rocket-lift 1.8s ease-in-out infinite;
+  }
+
+  .rocket-flame {
+    transform-origin: 12px 17px;
+    animation: flame-flicker 0.55s ease-in-out infinite alternate;
+  }
+
+  .rocket-flame--outer {
+    animation-duration: 0.4s;
+    animation-direction: alternate-reverse;
+  }
+
+  /* Ready rocket: idle bob + pad glow */
+  .release__icon--rocket-ready {
+    color: var(--text-2);
+    overflow: visible;
+  }
+
+  .release__icon--rocket-ready .rocket-ready {
+    transform-origin: 12px 20px;
+    animation: rocket-bob 2.4s ease-in-out infinite;
+  }
+
+  .pad-glow {
+    animation: pad-glow 2.4s ease-in-out infinite;
+  }
+
+  @keyframes chrome-pulse {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 0 transparent);
+      opacity: 0.92;
+    }
+    50% {
+      filter: drop-shadow(0 0 4px color-mix(in srgb, #4285f4 55%, transparent));
+      opacity: 1;
+    }
+  }
+
+  @keyframes rocket-lift {
+    0%,
+    100% {
+      transform: translateY(1px);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes flame-flicker {
+    from {
+      opacity: 0.55;
+      transform: scaleY(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1.15);
+    }
+  }
+
+  @keyframes rocket-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-1.5px);
+    }
+  }
+
+  @keyframes pad-glow {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .release__icon--chrome,
+    .release__icon--rocket-launch .rocket-body,
+    .rocket-flame,
+    .rocket-flame--outer,
+    .release__icon--rocket-ready .rocket-ready,
+    .pad-glow {
+      animation: none;
+    }
+
+    .release__icon--chrome {
+      filter: none;
+      opacity: 1;
+    }
+  }
+
+  .prose p,
+  .prose li {
+    color: var(--text-2);
+  }
+
+  .prose ul {
+    margin: 0;
+    padding-left: 1.15rem;
+  }
+
+  .prose li + li {
+    margin-top: var(--space-2);
+  }
+</style>

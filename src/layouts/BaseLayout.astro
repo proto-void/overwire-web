@@ -1,5 +1,8 @@
 ---
 import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import ChromeIcon from '../components/ChromeIcon.astro';
+import GitHubIcon from '../components/GitHubIcon.astro';
 import { siteConfig } from '../../site.config';
 import { absoluteUrl, softwareApplicationLd, websiteLd } from '../lib/seo';
 
@@ -64,17 +67,27 @@ if (jsonLd) {
     }
   </head>
   <body>
+    <SiteHeader />
     <slot />
     <footer class="site-footer">
       <div class="wrap site-footer__inner">
         <nav class="site-footer__nav" aria-label="Footer">
           <a href="/#features">Features</a>
+          <a href="/#pricing">Pricing</a>
+          <a href="/changelog/">Changelog</a>
+          <a href="/support/">Support</a>
           <a href="/privacy/">Privacy</a>
           <a href="/vs-resource-override/">vs Resource Override</a>
-          <a href={siteConfig.github}>GitHub</a>
+          <a class="site-footer__icon-link" href={siteConfig.github}>
+            <GitHubIcon size={18} />
+            GitHub
+          </a>
           {
             siteConfig.chromeStoreUrl ? (
-              <a href={siteConfig.chromeStoreUrl}>Chrome Web Store</a>
+              <a class="site-footer__icon-link" href={siteConfig.chromeStoreUrl}>
+                <ChromeIcon size={18} />
+                Chrome Web Store
+              </a>
             ) : null
           }
         </nav>

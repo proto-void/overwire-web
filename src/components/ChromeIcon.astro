@@ -1,0 +1,54 @@
+---
+interface Props {
+  class?: string;
+  size?: number;
+}
+
+const { class: className = 'chrome-icon', size = 18 } = Astro.props;
+const uid = Math.random().toString(36).slice(2, 9);
+const redId = `chrome-red-${uid}`;
+const yellowId = `chrome-yellow-${uid}`;
+const greenId = `chrome-green-${uid}`;
+---
+
+<svg
+  class={className}
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 48 48"
+  width={size}
+  height={size}
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={redId} x1="3.2173" y1="15" x2="44.7812" y2="15" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d93025" />
+      <stop offset="1" stop-color="#ea4335" />
+    </linearGradient>
+    <linearGradient id={yellowId} x1="20.7219" y1="47.6791" x2="41.5039" y2="11.6837" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fcc934" />
+      <stop offset="1" stop-color="#fbbc04" />
+    </linearGradient>
+    <linearGradient id={greenId} x1="26.5981" y1="46.5015" x2="5.8161" y2="10.506" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1e8e3e" />
+      <stop offset="1" stop-color="#34a853" />
+    </linearGradient>
+  </defs>
+  <!-- Soft white halo so wedges stay crisp on pink/purple CTAs -->
+  <circle cx="24" cy="24" r="23.25" fill="#fff" opacity="0.92" />
+  <circle cx="24" cy="23.9947" r="12" fill="#fff" />
+  <path
+    fill={`url(#${redId})`}
+    d="M24 12h20.7812a23.9939 23.9939 0 0 0-41.5639.0029L13.6079 30l.0093-.0024A11.9852 11.9852 0 0 1 24 12Z"
+  />
+  <circle cx="24" cy="24" r="9.5" fill="#1a73e8" />
+  <path
+    fill={`url(#${yellowId})`}
+    d="M34.3913 30.0029 24.0007 48A23.994 23.994 0 0 0 44.78 12.0031H23.9989l-.0025.0093A11.985 11.985 0 0 1 34.3913 30.0029Z"
+  />
+  <path
+    fill={`url(#${greenId})`}
+    d="M13.6086 30.0031 3.218 12.006A23.994 23.994 0 0 0 24.0025 48L34.3931 30.0029l-.0067-.0068a11.9852 11.9852 0 0 1-20.7778.007Z"
+  />
+</svg>
+

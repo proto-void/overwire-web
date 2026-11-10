@@ -3,9 +3,94 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { siteConfig } from '../../../site.config';
 import { breadcrumbLd } from '../../lib/seo';
 
-const title = `Detour vs Resource Override · ${siteConfig.name}`;
+const title = `Overwire vs Resource Override · ${siteConfig.name}`;
 const description =
-  'Honest comparison: Detour is an MIT Manifest V3 rewrite inspired by Resource Override — local redirects, mocks, and overrides in Chrome without a Detour cloud.';
+  'Side-by-side comparison: Overwire is an MIT Manifest V3 rewrite inspired by Resource Override — local redirects, mocks, API Tester, and Databases, with no Overwire cloud.';
+
+type Cell = string;
+
+const rows: { aspect: string; overwire: Cell; ro: Cell }[] = [
+  {
+    aspect: 'Extension model',
+    overwire: 'Manifest V3; maintained Chrome path (declarativeNetRequest)',
+    ro: 'Classic Manifest V2 Resource Override',
+  },
+  {
+    aspect: 'License',
+    overwire: 'MIT (proto-void/overwire)',
+    ro: 'Original Resource Override project (separate codebase)',
+  },
+  {
+    aspect: 'Cloud / account',
+    overwire: 'Local-only. No account. No Overwire server.',
+    ro: 'Local rules on your device (no Overwire-style cloud)',
+  },
+  {
+    aspect: 'Redirect URLs',
+    overwire: 'Yes',
+    ro: 'Yes',
+  },
+  {
+    aspect: 'Modify headers / block',
+    overwire: 'Yes',
+    ro: 'Yes',
+  },
+  {
+    aspect: 'Inject JS / CSS',
+    overwire: 'Yes',
+    ro: 'Yes',
+  },
+  {
+    aspect: 'Mock fetch / XHR',
+    overwire: 'Yes',
+    ro: 'Yes',
+  },
+  {
+    aspect: 'Replace response body',
+    overwire: 'Yes (debugger / filter paths; optional Local Bridge for disk)',
+    ro: 'Yes (including classic file override)',
+  },
+  {
+    aspect: 'Rule tester',
+    overwire: 'Yes — paste a URL and see which rule wins',
+    ro: 'Rules editor only (no Overwire-style tester)',
+  },
+  {
+    aspect: 'Match log',
+    overwire: 'Yes — recent matches on your device',
+    ro: 'Not the Overwire session match log',
+  },
+  {
+    aspect: 'Starter recipes',
+    overwire: 'Yes (localhost, CORS, SPA helpers)',
+    ro: 'No Overwire recipes pack',
+  },
+  {
+    aspect: 'API Tester',
+    overwire: 'Yes — local HTTP client (collections, environments, history)',
+    ro: 'No',
+  },
+  {
+    aspect: 'Databases workbench',
+    overwire: 'Yes — local explorer/queries via optional Overwire Helper',
+    ro: 'No',
+  },
+  {
+    aspect: 'Local Bridge (file serve)',
+    overwire: 'Yes — optional CLI serves a folder on loopback',
+    ro: 'File override from disk (different model; no Overwire Bridge)',
+  },
+  {
+    aspect: 'Import Resource Override exports',
+    overwire: 'Yes — import common RO export formats',
+    ro: 'Native export / import of its own formats',
+  },
+  {
+    aspect: 'Browsers',
+    overwire: 'Chrome Web Store live; Edge / Firefox builds exist (store listings may lag)',
+    ro: 'Depends on the original extension build and browser policy',
+  },
+];
 ---
 
 <BaseLayout
@@ -21,58 +106,59 @@ const description =
     <div class="wrap vs__inner">
       <header class="vs__head">
         <p class="vs__eyebrow">Comparison</p>
-        <h1>Detour as a Resource Override alternative</h1>
+        <h1>Overwire as a Resource Override alternative</h1>
         <p class="vs__lede">
-          Looking for a <strong>Resource Override alternative</strong> on modern Chrome? Detour is an
-          MIT-licensed rewrite inspired by Resource Override, built for Manifest V3 — still local-only,
-          still for developers who need to redirect and override requests in the browser.
+          Looking for a <strong>Resource Override alternative</strong> on modern Chrome? Overwire is an
+          MIT-licensed rewrite inspired by Resource Override, built for Manifest V3. Same idea: point
+          production at localhost or mocks without a proxy appliance. Overwire also adds a local API
+          Tester and Databases workbench. Still no account and no Overwire server.
         </p>
       </header>
 
+      <div class="vs__table-wrap" role="region" aria-labelledby="compare-caption" tabindex="0">
+        <table class="vs__table">
+          <caption id="compare-caption" class="vs__caption">
+            Side-by-side feature comparison of Overwire and Resource Override
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Aspect</th>
+              <th scope="col">Overwire</th>
+              <th scope="col">Resource Override</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rows.map((row) => (
+                <tr>
+                  <th scope="row">{row.aspect}</th>
+                  <td>{row.overwire}</td>
+                  <td>{row.ro}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
       <div class="prose">
-        <h2>What stays the same</h2>
-        <ul>
-          <li>Redirect production URLs to localhost or another origin</li>
-          <li>Modify headers, block URLs, inject JS/CSS, mock fetch/XHR, replace bodies</li>
-          <li>Rules live on your device — no account and no Detour server</li>
-          <li>Import-friendly mindset for people coming from Resource Override exports</li>
-        </ul>
-
-        <h2>What is different</h2>
-        <ul>
-          <li>
-            <strong>Manifest V3</strong> — Detour targets current Chrome extension APIs (declarative
-            net request, optional debugger for body replace)
-          </li>
-          <li>
-            <strong>New codebase</strong> — not a fork of the old extension; MIT under
-            <a href={siteConfig.github}>proto-void/detour</a>
-          </li>
-          <li>
-            <strong>Brand</strong> — Detour by Protovoid; product site at
-            <a href="/">detour.protovoid.com</a>
-          </li>
-          <li>
-            <strong>Not a proxy SaaS</strong> — unrelated to any “Detour” VPN/proxy add-on; this is a
-            developer tools extension only
-          </li>
-        </ul>
-
-        <h2>When to choose Detour</h2>
+        <h2>When to choose Overwire</h2>
         <p>
-          Choose Detour if you need a maintained Chrome path to redirect requests and override
-          responses locally — mock APIs, point CDNs at localhost, inject debug scripts — without
-          running Charles/Fiddler or trusting a cloud rewrite service.
+          Choose Overwire if you need a maintained Chrome path to redirect requests and override
+          responses locally — mock APIs, point CDNs at localhost, inject debug scripts — and you want
+          the same extension to carry a local API Tester and Databases workbench, without running
+          Charles/Fiddler or trusting a cloud rewrite service.
         </p>
         <p>
           Prefer staying on the original Resource Override build if that extension still meets your
-          browser and policy needs. This page is an honest comparison, not a claim that every Legacy
+          browser and policy needs. This page is an honest comparison, not a claim that every legacy
           MV2 detail is identical.
         </p>
 
         <p class="vs__cta">
           <a class="btn btn--primary" href={siteConfig.github}>View source on GitHub</a>
           <a class="btn btn--ghost" href="/">Product home</a>
+          <a class="btn btn--ghost" href="/changelog/">Changelog</a>
         </p>
       </div>
     </div>
@@ -85,7 +171,7 @@ const description =
   }
 
   .vs__inner {
-    max-width: 40rem;
+    max-width: min(52rem, 100%);
   }
 
   .vs__eyebrow {
@@ -104,29 +190,86 @@ const description =
   }
 
   .vs__lede {
-    margin: 0 0 var(--space-7);
+    margin: 0 0 var(--space-6);
     color: var(--text-2);
     font-size: var(--text-lg);
   }
 
+  .vs__table-wrap {
+    margin: 0 0 var(--space-7);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    outline-offset: 3px;
+  }
+
+  .vs__caption {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    color: var(--text-2);
+    font-size: var(--text-sm);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vs__table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .vs__table th,
+  .vs__table td {
+    padding: 0.85rem var(--space-4);
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vs__table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .vs__table tbody th {
+    width: 28%;
+    min-width: 8.5rem;
+    color: var(--text);
+    font-weight: 560;
+    letter-spacing: -0.01em;
+    background: color-mix(in srgb, var(--surface-2) 55%, transparent);
+  }
+
+  .vs__table tbody td {
+    color: var(--text-2);
+    width: 36%;
+  }
+
+  .vs__table tbody tr:last-child th,
+  .vs__table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .vs__table tbody tr:hover td,
+  .vs__table tbody tr:hover th {
+    background: color-mix(in srgb, var(--pv-violet) 12%, var(--surface));
+  }
+
   .prose h2 {
-    margin: var(--space-6) 0 var(--space-3);
+    margin: 0 0 var(--space-3);
     font-size: var(--text-lg);
     letter-spacing: -0.02em;
   }
 
-  .prose p,
-  .prose li {
+  .prose p {
     color: var(--text-2);
-  }
-
-  .prose ul {
-    margin: 0;
-    padding-left: 1.2rem;
-  }
-
-  .prose li + li {
-    margin-top: var(--space-2);
   }
 
   .vs__cta {

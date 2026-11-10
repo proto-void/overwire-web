@@ -5,7 +5,7 @@ import { siteConfig } from '../../../site.config';
 
 <BaseLayout
   title={`Privacy · ${siteConfig.name}`}
-  description="Detour privacy policy — what stays on your device, what we do not collect, and how to contact the maintainers."
+  description="Overwire privacy policy — what stays on your device, what we do not collect, and how to contact the maintainers."
   canonicalPath="/privacy/"
 >
   <main class="legal">
@@ -14,13 +14,13 @@ import { siteConfig } from '../../../site.config';
         <p class="legal__eyebrow">Policy</p>
         <h1>Privacy</h1>
         <p class="legal__meta">
-          <strong>Detour</strong> (“{siteConfig.tagline}”) · Effective 2026-10-07
+          <strong>Overwire</strong> (“{siteConfig.tagline}”) · Effective 2026-10-23 · Updated 2026-11-10
         </p>
       </header>
 
       <div class="prose">
         <p>
-          Detour is a browser extension that runs on your device. It is free, MIT-licensed software.
+          Overwire is a browser extension that runs on your device. It is free, MIT-licensed software.
           The project does not operate an account system or a server for the extension.
         </p>
 
@@ -30,11 +30,19 @@ import { siteConfig } from '../../../site.config';
             Rules you write or import (including redirects, headers, injected code, mocks, and
             replacement bodies)
           </li>
-          <li>Whether Detour is on, theme, and badge preference</li>
+          <li>Whether Overwire is on, theme, and badge preference</li>
           <li>The apply report (which rules were installed or refused)</li>
           <li>
             A session match log: up to 50 rows with a rule label and URL. It is cleared when the
             browser session ends. It does not include rule bodies
+          </li>
+          <li>
+            API Tester collections, request history, and environment variables (including any secrets
+            you store there locally)
+          </li>
+          <li>
+            Databases connection metadata and query collections. Connection secrets may be stored in
+            the OS keychain via the optional local Overwire Helper — not on an Overwire server
           </li>
         </ul>
         <p>Firefox’s manifest declares data collection as <strong>none</strong>.</p>
@@ -43,8 +51,8 @@ import { siteConfig } from '../../../site.config';
         <ul>
           <li>No account, sign-in, or cloud sync</li>
           <li>
-            No telemetry. The extension does not send rule bodies, file contents, or the match log
-            anywhere
+            No telemetry. The extension does not send rule bodies, file contents, the match log, API
+            Tester history, or Databases credentials anywhere
           </li>
           <li>No sale of personal information</li>
           <li>
@@ -57,7 +65,7 @@ import { siteConfig } from '../../../site.config';
         <p>
           {siteConfig.url} is a static product site. Standard CDN and edge logs (IP, user agent,
           timestamps) may be retained briefly for security and reliability. There is no account form
-          and no analytics product embedded by Detour on this site.
+          and no analytics product embedded by Overwire on this site.
         </p>
 
         <h2>Permissions</h2>
@@ -74,9 +82,9 @@ import { siteConfig } from '../../../site.config';
           Questions:{' '}
           <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>
           {' · '}
-          <a href={siteConfig.github}>github.com/proto-void/detour</a>
+          <a href={siteConfig.github}>github.com/proto-void/overwire</a>
           {' · '}
-          <a href="/">detour.protovoid.com</a>
+          <a href="/">overwire.protovoid.com</a>
         </p>
       </div>
     </div>

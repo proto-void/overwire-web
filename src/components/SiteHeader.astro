@@ -1,0 +1,205 @@
+---
+import { siteConfig } from '../../site.config';
+import ChromeIcon from './ChromeIcon.astro';
+import GitHubIcon from './GitHubIcon.astro';
+
+const path = Astro.url.pathname;
+
+const primaryLinks = [
+  { href: '/#features', label: 'Features' },
+  { href: '/#workbench', label: 'Workbench' },
+  { href: '/#pricing', label: 'Pricing' },
+  { href: '/changelog/', label: 'Changelog' },
+  {
+    href: '/vs-resource-override/',
+    label: 'vs RO',
+    title: 'vs Resource Override',
+  },
+] as const;
+
+const secondaryLinks = [
+  { href: '/support/', label: 'Support' },
+  { href: '/privacy/', label: 'Privacy' },
+] as const;
+
+const allLinks = [...primaryLinks, ...secondaryLinks];
+
+function isCurrent(href: string): boolean {
+  if (href.startsWith('/#')) return path === '/' || path === '';
+  return path === href || path.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="site-header__brand" href="/" aria-label={`${siteConfig.name} home`}>
+      <img
+        class="site-header__mark"
+        src="/brand/mark.svg"
+        alt=""
+        width="28"
+        height="28"
+        decoding="async"
+      />
+      <span class="site-header__wordmark" aria-hidden="true">{siteConfig.name}</span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      {
+        primaryLinks.map((link) => (
+          <a
+            href={link.href}
+            title={'title' in link ? link.title : undefined}
+            aria-label={'title' in link ? link.title : undefined}
+            aria-current={isCurrent(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <span class="site-header__nav-secondary">
+        {
+          secondaryLinks.map((link) => (
+            <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+              {link.label}
+            </a>
+          ))
+        }
+      </span>
+      <details class="site-header__more" data-nav-more>
+        <summary class="site-header__more-summary">More</summary>
+        <div class="site-header__more-panel" role="group" aria-label="More links">
+          {
+            secondaryLinks.map((link) => (
+              <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+      </details>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="site-header__github" href={siteConfig.github}>
+        <GitHubIcon size={15} />
+        GitHub
+      </a>
+      {
+        siteConfig.chromeStoreUrl ? (
+          <a class="btn btn--primary site-header__cta" href={siteConfig.chromeStoreUrl}>
+            <ChromeIcon size={16} />
+            Get for Chrome
+          </a>
+        ) : (
+          <span class="btn btn--muted site-header__cta" title="Chrome Web Store listing coming soon">
+            <ChromeIcon size={16} />
+            Chrome soon
+          </span>
+        )
+      }
+      <button
+        type="button"
+        class="site-header__menu"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Open menu"
+      >
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav" hidden>
+    <nav aria-label="Mobile">
+      {
+        allLinks.map((link) => (
+          <a
+            href={link.href}
+            title={'title' in link ? link.title : undefined}
+            aria-label={'title' in link ? link.title : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a href={siteConfig.github}>GitHub</a>
+    </nav>
+  </div>
+</header>
+<button
+  type="button"
+  class="mobile-nav-scrim"
+  data-nav-scrim
+  hidden
+  aria-label="Close menu"
+  tabindex="-1"
+></button>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+  const header = toggle?.closest('header');
+  const next = header?.nextElementSibling;
+  const scrim =
+    next instanceof HTMLElement && next.matches('[data-nav-scrim]')
+      ? next
+      : document.querySelector('[data-nav-scrim]');
+  const more = header?.querySelector('[data-nav-more]');
+
+  const setOpen = (open) => {
+    if (!(toggle instanceof HTMLElement) || !(panel instanceof HTMLElement)) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    panel.hidden = !open;
+    if (scrim instanceof HTMLElement) scrim.hidden = !open;
+    document.body.classList.toggle('nav-mobile-open', open);
+  };
+
+  const closeMore = () => {
+    if (more instanceof HTMLDetailsElement) more.open = false;
+  };
+
+  toggle?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    closeMore();
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    setOpen(!open);
+  });
+
+  if (scrim instanceof HTMLElement) {
+    scrim.addEventListener('click', () => setOpen(false));
+  }
+
+  document.addEventListener('pointerdown', (event) => {
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+
+    if (more instanceof HTMLDetailsElement && more.open && !more.contains(target)) {
+      closeMore();
+    }
+
+    if (!(toggle instanceof HTMLElement) || toggle.getAttribute('aria-expanded') !== 'true') return;
+    if (toggle.contains(target)) return;
+    if (panel instanceof Node && panel.contains(target)) return;
+    if (scrim instanceof Node && scrim.contains(target)) return;
+    setOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      setOpen(false);
+      closeMore();
+    }
+  });
+
+  panel?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  more?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => closeMore());
+  });
+</script>

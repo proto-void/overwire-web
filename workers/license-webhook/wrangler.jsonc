@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "overwire-license-webhook",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-04",
+  "workers_dev": true,
+  "vars": {
+    "LICENSE_MAIL_FROM": "overwire@protovoid.com",
+    "LICENSE_KEY_PREFIX": "OWPRO"
+  }
+}

@@ -1,6 +1,6 @@
 import { siteConfig } from '../../site.config';
 
-/** Absolute https://detour.protovoid.com/... URL. */
+/** Absolute https://overwire.protovoid.com/... URL (canonical host from site.config). */
 export function absoluteUrl(path = '/') {
   const base = siteConfig.url.replace(/\/$/, '');
   if (!path || path === '/') return `${base}/`;

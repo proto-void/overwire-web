@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+/** Official tracker for Overwire (rebrand target). Keep in sync with docs/distribution/support.md. */
+const github = 'https://github.com/proto-void/overwire';
+const issues = `${github}/issues`;
+const discussions = `${github}/discussions`;
+---
+
+<BaseLayout
+  title="Support · Overwire"
+  description="Help and Community for Overwire — report bugs, request local-first features, and ask questions on GitHub. Sole maintainer; no cloud sync or 1:1 support."
+  canonicalPath="/support/"
+>
+  <main class="legal">
+    <div class="wrap legal__inner">
+      <header class="legal__head">
+        <p class="legal__eyebrow">Support</p>
+        <h1>🌐 Help &amp; Community</h1>
+      </header>
+
+      <div class="prose">
+        <p>
+          <strong>Have a question, bug, or feature idea?</strong>
+        </p>
+        <p>
+          Overwire is free, open-source, and built with love by a <strong>sole maintainer</strong>.
+          To keep development fast and focused, we coordinate all feedback and tracking through our
+          official <strong>GitHub repository</strong>.
+        </p>
+
+        <p>Please follow these quick guidelines before posting:</p>
+
+        <ul>
+          <li>
+            <strong>🐛 Found a Bug?</strong><br />
+            Open a <strong>GitHub Issue</strong> using our Bug Report template. Please include your
+            browser version (Chrome or Firefox) and the exact matching rules or console logs so it
+            can be isolated and fixed quickly.{' '}
+            <a href={issues}>GitHub Issues</a>
+          </li>
+          <li>
+            <strong>💡 Feature Requests</strong><br />
+            Have an idea for a new local action, recipe, or bridge enhancement? Head to{' '}
+            <strong>GitHub Issues</strong> and select the Feature Request template.{' '}
+            <em
+              >Note: Overwire is strictly a zero-account, local-first utility, so cloud syncing or
+              remote server features are outside our architectural scope.</em
+            >{' '}
+            <a href={issues}>GitHub Issues</a>
+          </li>
+          <li>
+            <strong>💬 General Questions &amp; Discussions</strong><br />
+            Not sure how to write a regex match, or want to discuss a custom mock setup? Please use
+            the <strong>GitHub Discussions</strong> tab instead of opening an issue. It’s the
+            perfect place for community Q&amp;A, tips, and open-ended conversations.{' '}
+            <a href={discussions}>GitHub Discussions</a>
+          </li>
+        </ul>
+
+        <p class="prose__cta">
+          👉{' '}
+          <a href={github}><strong>Visit the Overwire GitHub Repository</strong></a>
+        </p>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding: clamp(3rem, 8vh, 5rem) 0 var(--space-8);
+  }
+
+  .legal__inner {
+    max-width: 40rem;
+  }
+
+  .legal__eyebrow {
+    margin: 0 0 var(--space-2);
+    color: var(--accent);
+    font-size: var(--text-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .legal__head h1 {
+    margin: 0 0 var(--space-6);
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+    letter-spacing: -0.04em;
+  }
+
+  .prose p,
+  .prose li {
+    color: var(--text-2);
+  }
+
+  .prose ul {
+    padding-left: 1.15rem;
+  }
+
+  .prose li + li {
+    margin-top: var(--space-4);
+  }
+
+  .prose a {
+    color: var(--accent);
+  }
+
+  .prose__cta {
+    margin-top: var(--space-6);
+  }
+
+  .prose strong {
+    color: var(--text);
+  }
+</style>
