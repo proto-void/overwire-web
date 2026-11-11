@@ -229,7 +229,7 @@ const rows: { aspect: string; overwire: Cell; ro: Cell }[] = [
 
   .vs__table thead th {
     position: sticky;
-    top: 0;
+    top: calc(env(safe-area-inset-top, 0px) + var(--site-header-height));
     z-index: 1;
     background: var(--surface-2);
     color: var(--text);
@@ -257,9 +257,11 @@ const rows: { aspect: string; overwire: Cell; ro: Cell }[] = [
     border-bottom: none;
   }
 
-  .vs__table tbody tr:hover td,
-  .vs__table tbody tr:hover th {
-    background: color-mix(in srgb, var(--pv-violet) 12%, var(--surface));
+  @media (hover: hover) and (pointer: fine) {
+    .vs__table tbody tr:hover td,
+    .vs__table tbody tr:hover th {
+      background: color-mix(in srgb, var(--pv-violet) 12%, var(--surface));
+    }
   }
 
   .prose h2 {

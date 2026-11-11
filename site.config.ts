@@ -9,7 +9,7 @@ export const siteConfig = {
   url: 'https://overwire.protovoid.com',
   /** Legacy host — currently dual-host 200 on `detour-web`; 301 template only (deploy when DNS clean). */
   legacyUrl: 'https://detour.protovoid.com',
-  themeColor: '#0B0F19',
+  themeColor: '#07060d',
   defaultOgImage: '/brand/og-default.png',
   ogImageWidth: 1200,
   ogImageHeight: 630,
