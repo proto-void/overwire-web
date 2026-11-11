@@ -1,7 +1,7 @@
 /**
- * Overwire license issuance — Stripe webhook Worker (TEMPLATE).
+ * Overwire license issuance — Stripe webhook Worker.
  *
- * Spec: Resource Override / overwire monorepo AI/specs/licensing.md (Draft until Approved).
+ * Spec: overwire monorepo AI/specs/licensing.md (Approved).
  * ADR-032: offline Ed25519 OWPRO keys; zero Overwire-hosted license DB.
  *
  * DO NOT deploy with real secrets committed to git.
@@ -9,13 +9,14 @@
  *
  * Expected secrets / bindings (names only — values never in repo):
  *   STRIPE_WEBHOOK_SECRET
- *   STRIPE_SECRET_KEY
- *   LICENSE_ED25519_PRIVATE_KEY   (PKCS8 PEM or raw base64url — choose one at deploy time)
- *   LICENSE_MAIL_API_KEY          (Resend / Postmark / etc.)
+ *   STRIPE_SECRET_KEY             (sk_test… for sandbox; sk_live… only for Phase B)
+ *   LICENSE_ED25519_PRIVATE_KEY   (PKCS8 base64 / base64url — never commit)
+ *   LICENSE_MAIL_API_KEY          (Resend / Postmark / etc. — optional)
  *
  * Vars (non-secret, wrangler.jsonc):
  *   LICENSE_MAIL_FROM
  *   LICENSE_KEY_PREFIX            (default OWPRO)
+ *   SANDBOX_ECHO_LICENSE          ("1" only on sandbox Worker — echo key in JSON)
  */
 
 const encoder = new TextEncoder();
@@ -128,7 +129,7 @@ async function attachKeyToCustomer(customerId, licenseKey, stripeSecret) {
   if (!customerId || !stripeSecret) return;
   const body = new URLSearchParams();
   body.set('metadata[overwire_license_key]', licenseKey);
-  await fetch(`https://api.stripe.com/v1/customers/${encodeURIComponent(customerId)}`, {
+  const res = await fetch(`https://api.stripe.com/v1/customers/${encodeURIComponent(customerId)}`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${stripeSecret}`,
@@ -136,6 +137,10 @@ async function attachKeyToCustomer(customerId, licenseKey, stripeSecret) {
     },
     body,
   });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Stripe customer update ${res.status}: ${text.slice(0, 200)}`);
+  }
 }
 
 /**
@@ -164,7 +169,11 @@ export default {
     const url = new URL(request.url);
 
     if (request.method === 'GET' && url.pathname === '/health') {
-      return Response.json({ ok: true, service: 'overwire-license-webhook', template: true });
+      return Response.json({
+        ok: true,
+        service: 'overwire-license-webhook',
+        sandbox: env.SANDBOX_ECHO_LICENSE === '1',
+      });
     }
 
     if (request.method !== 'POST' || url.pathname !== '/stripe/webhook') {
@@ -213,7 +222,17 @@ export default {
     }
 
     const customerId = typeof session.customer === 'string' ? session.customer : '';
-    await attachKeyToCustomer(customerId, licenseKey, env.STRIPE_SECRET_KEY || '');
+    let attached = false;
+    if (customerId && env.STRIPE_SECRET_KEY) {
+      try {
+        await attachKeyToCustomer(customerId, licenseKey, env.STRIPE_SECRET_KEY);
+        attached = true;
+      } catch (err) {
+        console.error('[license-webhook] attach failed', err);
+      }
+    } else if (!env.STRIPE_SECRET_KEY) {
+      console.warn('[license-webhook] STRIPE_SECRET_KEY missing — skipped customer metadata attach');
+    }
 
     const email =
       (typeof session.customer_details === 'object' &&
@@ -228,7 +247,12 @@ export default {
       apiKey: env.LICENSE_MAIL_API_KEY || '',
     });
 
-    // Never echo the full key in HTTP responses in production logs dashboards if avoidable.
-    return Response.json({ received: true, issued: true, tier: claims.tier });
+    /** @type {Record<string, unknown>} */
+    const body = { received: true, issued: true, tier: claims.tier, attached };
+    // Sandbox E2E only — never enable SANDBOX_ECHO_LICENSE on a live Worker.
+    if (env.SANDBOX_ECHO_LICENSE === '1') {
+      body.licenseKey = licenseKey;
+    }
+    return Response.json(body);
   },
 };
