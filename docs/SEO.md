@@ -27,7 +27,7 @@ Prefer the canonical host once it serves content:
 3. Request indexing for `/`, `/#pricing` (as `/`), `/vs-resource-override/`, `/support/`
 4. Optional: Rich Results Test for SoftwareApplication / FAQPage on the home URL
 
-Dual-host period (no live 301): the same paths are also live on `https://detour.protovoid.com/`. Do not deploy the 301 Worker until overwire resolves cleanly without `--resolve` — see [DEPLOY.md](DEPLOY.md).
+Canonical host only: `https://overwire.protovoid.com/`. `detour.protovoid.com` was taken down (no 301) — see [DEPLOY.md](DEPLOY.md).
 
 ## After Chrome Web Store is Overwire-branded
 
@@ -37,7 +37,7 @@ Dual-host period (no live 301): the same paths are also live on `https://detour.
 
 ## Sanity checks after deploy
 
-- `https://detour.protovoid.com/` and `https://overwire.protovoid.com/` (both dual-host on `detour-web`) — title, H1, FAQ, `#pricing`, footer links
+- `https://overwire.protovoid.com/` — title, H1, FAQ, `#pricing`, footer links
 - `/changelog/`, `/privacy/`, `/support/`, `/vs-resource-override/`
 - `/brand/og-default.png` (1200×630)
 - `/sitemap-index.xml`, `/robots.txt`

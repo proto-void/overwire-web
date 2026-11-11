@@ -14,10 +14,6 @@
   },
   "routes": [
     {
-      "pattern": "detour.protovoid.com",
-      "custom_domain": true
-    },
-    {
       "pattern": "overwire.protovoid.com",
       "custom_domain": true
     }
